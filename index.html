@@ -7,21 +7,22 @@
     <!-- Vue development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="./assets/design.css">
-
-    <!-- Lesson objects -->
-    <script src="assets/lessons.js"></script>
     <!-- Font=Awesome library -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <!-- Lesson objects -->
+    <script src="assets/lessons.js"></script>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./assets/design.css">
 
 </head>
 
 <body>
 
     <div id="app">
+
         <div v-if='showProduct'>
             <!-- product page code -->
+
             <header>
                 <button v-on:click='showCheckout' v-if="this.cart.length">
                 {{this.cart.length}}
@@ -40,16 +41,20 @@
                 <p>
                     <strong>Order:</strong>
                     <select v-model="orderAscending">
-            <option disabled value="">Order By</option>
-            <option v-for="(selectedValue, key) in userOrder" v-on:change='ss' v-bind:value="selectedValue">
-                {{selectedValue}}
-        </select>
+                    <option disabled value="">Order By</option>
+                    <option v-for="(selectedValue, key) in userOrder" v-on:change='ss' v-bind:value="selectedValue">
+                        {{selectedValue}}
+                </select>
                 </p>
             </div>
 
-            <div class="contain">
+            <!-- Searching Options -->
+            <div id="search">
+                <input placeholder="Search..." type="text" v-model="search">
+            </div>
 
-                <div class="prod_box" v-for="lesson in lessons">
+            <div class="contain">
+                <div class="prod_box" v-for="lesson in filteredLessons">
                     <!-- lesson information -->
                     <h2 v-text="lesson.subject"> </h2>
                     <img v-bind:src="lesson.image" height="125">
@@ -83,7 +88,6 @@
         <!-- Finish Div for showing lessons -->
 
         <div v-else>
-
             <!-- checkout page code -->
             <!-- Button appears in checkout page to go back to lessons page -->
             <button v-on:click='showCheckout'>
@@ -102,27 +106,24 @@
                     remove
                 </button>
                 </div>
+            </div>
 
-                <!--diplay checkout inputs for user-->
-                <div id="checkout">
-                    <h2> Checkout</h2>
+            <!--diplay checkout inputs for user-->
+            <div id="checkout">
+                <h2> Checkout</h2>
 
-                    <form action="" method="post" onchange="return checkData()" name="signup">
-                        <br /><br />Name:
-                        <input name="NAME" type="text" id="NAME" />
-                        <br /><br /> Phone Number:
-                        <input name="PHONE" type="text" id="PHONE" />
-                        <input @click="submitForm()" v-bind:disabled='formIsNotCorrect' id="Button" type="submit" value="Place Order">
-                    </form>
-                </div>
-
+                <form action="" method="post" onchange="return checkData()" name="signup">
+                    <br /><br />Name:
+                    <input name="NAME" type="text" id="NAME" />
+                    <br /><br /> Phone Number:
+                    <input name="PHONE" type="text" id="PHONE" />
+                    <input @click="submitForm()" v-bind:disabled='formIsNotCorrect' id="Button" type="submit" value="Place Order">
+                </form>
             </div>
         </div>
 
     </div>
-
-    </div>
-
+    <!-- Stop app div -->
 
 </body>
 
@@ -131,130 +132,143 @@
 <script>
     let app = new Vue({
 
-            el: '#app',
-            data: {
-                showProduct: true,
-                lessons: allLessons,
-                userOrder: {
-                    a: 'Ascending',
-                    b: 'Descending'
-                },
-                formIsNotCorrect: true,
-                sorting: {
-                    Price: 'price',
-                    Subject: 'subject',
-                    Location: 'location',
-                    Availability: 'availableInventory'
-                },
-                userSelection: '',
-                orderAscending: '',
-                cart: [] // array to store items in shopping cart
+        el: '#app',
+        data: {
+            search: '',
+            userOrder: {
+                a: 'Ascending',
+                b: 'Descending'
             },
-
-
-
-            methods: {
-                showCheckout() {
-                    this.showProduct = this.showProduct ? false : true;
-                },
-                addToCart: function(lessons) {
-                    function ifCanAdd(item) {
-                        if (item.id == lessons.id) {
-                            lessons.availableInventory -= 1;
-                            return item;
-                        }
-                    }
-                    this.lessons.find(ifCanAdd);
-                    this.cart.push({
-                        cartId: (this.cart.length + 1),
-                        lessons
-                    })
-                },
-                deleteFromCart: function(lesson) {
-                    this.cart = this.cart.filter(item => item.cartId != lesson.cartId)
-
-                    function ifCan(item) {
-                        if (item.id == lesson.lessons.id) {
-                            console.log("adding " + item.id)
-                            item.availableInventory += 1
-                        }
-                    }
-                    this.lessons.find(ifCan)
-                },
-                canAddToCart(lessons) {
-                    return lessons.availableInventory > this.cartCount(lessons.id)
-                },
-                cartCount(id) {
-                    let count = 0;
-                    for (let i = 0; i < this.cart.length; i++) {
-                        if (this.cart[i] === id)
-                            count++;
-                    }
-                    return count;
-                },
-                sortBy(scenario) {
-                    if (scenario === "price") {
-                        function compare(a, b) {
-                            if (a.price > b.price) return 1;
-                            if (a.price < b.price) return -1;
-                            return 0;
-                        }
-                        this.orderAscending = "Descending"
-                        return this.lessons.sort(compare);
-                    } else if (scenario === "availableInventory") {
-                        function compare(a, b) {
-                            if (a.availableInventory > b.availableInventory) return 1;
-                            if (a.availableInventory < b.availableInventory) return -1;
-                            return 0;
-                        }
-                        this.orderAscending = "Descending"
-                        return this.lessons.sort(compare);
-                    } else if (scenario === "location") {
-                        function compare(a, b) {
-                            if (a.location > b.location) return 1;
-                            if (a.location < b.location) return -1;
-                            return 0;
-                        }
-                        this.orderAscending = "Descending"
-                        return this.lessons.sort(compare);
-                    } else if (scenario === "subject") {
-                        function compare(a, b) {
-                            if (a.subject > b.subject) return 1;
-                            if (a.subject < b.subject) return -1;
-                            return 0;
-                        }
-                        this.orderAscending = "Descending"
-                        return this.lessons.sort(compare);
+            formIsNotCorrect: true,
+            userSelection: '',
+            orderAscending: '',
+            lessons: allLessons,
+            sorting: {
+                Price: 'price',
+                Subject: 'subject',
+                Location: 'location',
+                Availability: 'availableInventory'
+            },
+            showProduct: true,
+            cart: [] // array to store items in shopping cart
+        },
+        methods: {
+            showCheckout() {
+                this.showProduct = this.showProduct ? false : true;
+            },
+            addToCart: function(lessons) {
+                function ifCanAdd(item) {
+                    if (item.id == lessons.id) {
+                        lessons.availableInventory -= 1;
+                        return item;
                     }
                 }
+                this.lessons.find(ifCanAdd);
+                this.cart.push({
+                    cartId: (this.cart.length + 1),
+                    lessons
+                })
             },
+            deleteFromCart: function(lesson) {
+                this.cart = this.cart.filter(item => item.cartId != lesson.cartId)
 
-            computed: {
-
-                ss() {
-                    if (this.orderAscending === "Ascending") {
-
-                        this.orderAscending = "Ascending"
-
-                        return this.lessons.reverse();
-
-                    } else if (this.orderAscending === "Descending") {
-                        this.orderAscending = "Descending"
-                        return this.lessons.reverse();
-
-                    } else {
-                        return this.lessons;
+                function ifCan(item) {
+                    if (item.id == lesson.lessons.id) {
+                        console.log("adding " + item.id)
+                        item.availableInventory += 1
                     }
-
-
-                },
-
+                }
+                this.lessons.find(ifCan)
+            },
+            submitForm() {
+                alert('Order submitted!')
+            },
+            canAddToCart(lessons) {
+                return lessons.availableInventory > this.cartCount(lessons.id)
+            },
+            cartCount(id) {
+                let count = 0;
+                for (let i = 0; i < this.cart.length; i++) {
+                    if (this.cart[i] === id)
+                        count++;
+                }
+                return count;
+            },
+            sortBy(scenario) {
+                if (scenario === "price") {
+                    function compare(a, b) {
+                        if (a.price > b.price) return 1;
+                        if (a.price < b.price) return -1;
+                        return 0;
+                    }
+                    this.orderAscending = "Descending"
+                    return this.lessons.sort(compare);
+                } else if (scenario === "availableInventory") {
+                    function compare(a, b) {
+                        if (a.availableInventory > b.availableInventory) return 1;
+                        if (a.availableInventory < b.availableInventory) return -1;
+                        return 0;
+                    }
+                    this.orderAscending = "Descending"
+                    return this.lessons.sort(compare);
+                } else if (scenario === "location") {
+                    function compare(a, b) {
+                        if (a.location > b.location) return 1;
+                        if (a.location < b.location) return -1;
+                        return 0;
+                    }
+                    this.orderAscending = "Descending"
+                    return this.lessons.sort(compare);
+                } else if (scenario === "subject") {
+                    function compare(a, b) {
+                        if (a.subject > b.subject) return 1;
+                        if (a.subject < b.subject) return -1;
+                        return 0;
+                    }
+                    this.orderAscending = "Descending"
+                    return this.lessons.sort(compare);
+                }
             }
 
+        },
+        computed: {
+
+            ss() {
+                if (this.orderAscending === "Ascending") {
+
+                    this.orderAscending = "Ascending"
+
+                    return this.lessons.reverse();
+
+                } else if (this.orderAscending === "Descending") {
+                    this.orderAscending = "Descending"
+                    return this.lessons.reverse();
+
+                } else {
+                    return this.lessons;
+                }
+
+
+            },
+            sortedLessons() {
+
+                function compare(a, b) {
+                    if (a.userSelection > b.userSelection) return 1;
+                    if (a.userSelection < b.userSelection) return -1;
+                    return 0;
+                }
+                return this.lessons.sort(compare);
+
+            },
+            filteredLessons() {
+
+                return this.lessons.filter(item =>
+
+                    item.subject.toLowerCase().includes(this.search.toLowerCase()) || item.location.toLowerCase().includes(this.search.toLowerCase()))
+            }
 
         },
-
-    );
+    });
 </script>
 
 
