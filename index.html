@@ -102,6 +102,20 @@
                     remove
                 </button>
                 </div>
+
+                <!--diplay checkout inputs for user-->
+                <div id="checkout">
+                    <h2> Checkout</h2>
+
+                    <form action="" method="post" onchange="return checkData()" name="signup">
+                        <br /><br />Name:
+                        <input name="NAME" type="text" id="NAME" />
+                        <br /><br /> Phone Number:
+                        <input name="PHONE" type="text" id="PHONE" />
+                        <input @click="submitForm()" v-bind:disabled='formIsNotCorrect' id="Button" type="submit" value="Place Order">
+                    </form>
+                </div>
+
             </div>
         </div>
 
@@ -125,6 +139,7 @@
                     a: 'Ascending',
                     b: 'Descending'
                 },
+                formIsNotCorrect: true,
                 sorting: {
                     Price: 'price',
                     Subject: 'subject',
@@ -240,4 +255,57 @@
         },
 
     );
+</script>
+
+
+<script type="application/javascript">
+    function checkData() {
+        //regex expression:
+        var phoneRegex = /^[0-9]*$/;
+        var nameRegex = /^[a-zA-Z]*$/;
+        var name = document.signup.NAME.value;
+        var phone = document.signup.PHONE.value;
+
+
+        var phoneResult = phoneRegex.test(phone);
+        var nameResult = nameRegex.test(name);
+
+
+        if (!phoneResult) {
+            alert("Please fill in your Phone Number with numbers only.")
+            document.signup.PHONE.focus()
+            document.getElementById("Button").disabled = true;
+            return false;
+        }
+        if (!nameResult) {
+            alert("Please fill in your Name with letters only.")
+            document.signup.NAME.focus()
+            document.getElementById("Button").disabled = true;
+            return false;
+        }
+
+        if (document.signup.NAME.value == "") {
+            alert("Please fill in your name.")
+            document.signup.NAME.focus()
+            return false;
+        }
+        if (document.signup.NAME.value.length < 5) {
+            alert("Please fill in your name with at least 5 letters.")
+            document.signup.NAME.focus()
+            return false;
+        }
+        if (document.signup.PHONE.value == "") {
+            alert("Please fill in your PHONE.")
+            document.signup.PHONE.focus()
+            return false;
+        }
+        if (document.signup.PHONE.value.length < 5) {
+            alert("Please fill in your name with at least 5 letters.")
+            document.signup.PHONE.focus()
+            return false;
+        } else {
+            document.getElementById("Button").disabled = false;
+            return true;
+        }
+    }
 </script>
