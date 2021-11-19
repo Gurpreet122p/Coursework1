@@ -22,7 +22,12 @@
     <div id="app">
         <div v-if='showProduct'>
             <!-- product page code -->
-
+            <header>
+                <button v-on:click='showCheckout' v-if="this.cart.length">
+                {{this.cart.length}}
+                <span class="fas fa-shopping-cart"></span> Checkout
+            </button>
+            </header>
             <!-- Sorting Options -->
             <div id="sort">
                 <p>Sort by</p>
@@ -78,8 +83,26 @@
         <!-- Finish Div for showing lessons -->
 
         <div v-else>
-            <!-- checkout page code -->
 
+            <!-- checkout page code -->
+            <!-- Button appears in checkout page to go back to lessons page -->
+            <button v-on:click='showCheckout'>
+                <span  class="fas fa-arrow-left"></span> Go Back
+            </button>
+
+            <!-- Basket code to diplay products in basket-->
+            <h2> Your Basket </h2>
+            <div class="contain">
+                <div class="prod_box" v-for="item in cart">
+                    <p v-text="item.lessons.subject"> </p>
+                    <img v-bind:src="item.lessons.image" height="50">
+                    <p v-text="item.lessons.location"> </p>
+                    <p>Price: {{item.lessons.price}}</p>
+                    <button v-on:click="deleteFromCart(item)">
+                    remove
+                </button>
+                </div>
+            </div>
         </div>
 
     </div>
