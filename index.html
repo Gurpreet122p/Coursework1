@@ -109,13 +109,51 @@
                     Availability: 'availableInventory'
                 },
                 userSelection: '',
-                orderAscending: ''
-
+                orderAscending: '',
+                cart: [] // array to store items in shopping cart
             },
 
 
 
             methods: {
+                showCheckout() {
+                    this.showProduct = this.showProduct ? false : true;
+                },
+                addToCart: function(lessons) {
+                    function ifCanAdd(item) {
+                        if (item.id == lessons.id) {
+                            lessons.availableInventory -= 1;
+                            return item;
+                        }
+                    }
+                    this.lessons.find(ifCanAdd);
+                    this.cart.push({
+                        cartId: (this.cart.length + 1),
+                        lessons
+                    })
+                },
+                deleteFromCart: function(lesson) {
+                    this.cart = this.cart.filter(item => item.cartId != lesson.cartId)
+
+                    function ifCan(item) {
+                        if (item.id == lesson.lessons.id) {
+                            console.log("adding " + item.id)
+                            item.availableInventory += 1
+                        }
+                    }
+                    this.lessons.find(ifCan)
+                },
+                canAddToCart(lessons) {
+                    return lessons.availableInventory > this.cartCount(lessons.id)
+                },
+                cartCount(id) {
+                    let count = 0;
+                    for (let i = 0; i < this.cart.length; i++) {
+                        if (this.cart[i] === id)
+                            count++;
+                    }
+                    return count;
+                },
                 sortBy(scenario) {
                     if (scenario === "price") {
                         function compare(a, b) {
