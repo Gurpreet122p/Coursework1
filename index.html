@@ -50,11 +50,11 @@
 
             <!-- Searching Options -->
             <div id="search">
-                <input placeholder="Search..." type="text" v-model="search">
+                <input placeholder="Search..." type="text" v-model="search"> {{userSearch}}
             </div>
 
             <div class="contain">
-                <div class="prod_box" v-for="lesson in filteredLessons">
+                <div class="prod_box" v-for="lesson in lessons">
                     <!-- lesson information -->
                     <h2 v-text="lesson.subject"> </h2>
                     <img v-bind:src="lesson.image" height="125">
@@ -141,8 +141,10 @@
             },
             formIsNotCorrect: true,
             userSelection: '',
+            searchResult: [],
+            lessons: [],
             orderAscending: '',
-            lessons: allLessons,
+           // lessons: allLessons,
             sorting: {
                 Price: 'price',
                 Subject: 'subject',
@@ -233,6 +235,34 @@
         },
         computed: {
 
+            userSearch() {
+/*
+                if (!this.search) {
+                    return console.log("No search ")
+                }
+                var localApp = this;
+
+                fetch('https://coursework2.herokuapp.com/Search/Lessons/?search=' + this.search + '', {
+                    method: 'GET'
+                })
+                    .then(function(response) {
+                        if (response.ok) {
+                            console.log('Success')
+                        } else {
+                            console.log('Error fetching data')
+                        }
+
+                        return response.json();
+                    })
+                    .then(function(json) {
+
+                        console.log(json)
+                        localApp.searchResult = json;
+
+                    })
+*/
+            },
+
             ss() {
                 if (this.orderAscending === "Ascending") {
 
@@ -262,12 +292,78 @@
             },
             filteredLessons() {
 
-                return this.lessons.filter(item =>
 
-                    item.subject.toLowerCase().includes(this.search.toLowerCase()) || item.location.toLowerCase().includes(this.search.toLowerCase()))
+
+                var localApp = this;
+
+
+                if (!this.search) {
+                   // return console.log("No search ")
+                    fetch('https://coursework2.herokuapp.com/collection/Lessons', {
+                        method: 'GET'
+                    })
+                        .then(function(response) {
+                            if (response.ok) {
+                                console.log('Successfully fetched the Data')
+                            } else {
+                                console.log('Error fetching data')
+                            }
+
+                            return response.json();
+                        })
+                        .then(function(json) {
+                            // use the json
+                            console.log(json)
+                            localApp.lessons = json;
+
+                        }).catch(function(error) {
+                        //Handle error
+                        console.log(error);
+                    });
+                } else {
+
+
+                    fetch('https://coursework2.herokuapp.com/Search/Lessons/?search=' + this.search + '', {
+                        method: 'GET'
+                    })
+                        .then(function(response) {
+                            if (response.ok) {
+                                console.log('Success')
+                            } else {
+                                console.log('Error fetching data')
+                            }
+
+                            return response.json();
+                        })
+                        .then(function(json) {
+
+                            console.log(json)
+                            localApp.lessons = json;
+
+                        })
+
+                }
+
+
+               // return this.lessons
+
+
+
+
+
+
+
+
+             //   return this.lessons.filter(item =>
+//                    item.subject.toLowerCase().includes(this.search.toLowerCase()) || item.location.toLowerCase().includes(this.search.toLowerCase()))
             }
 
         },
+        created: function() { //Vue lifecycle hook, called when data is loaded.
+
+            this.filteredLessons;
+
+        }
     });
 </script>
 
