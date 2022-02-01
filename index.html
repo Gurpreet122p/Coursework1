@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Courswork 2 Gur Preet Singh Kaur</title>
+    <title>Courswork 1 Gur Preet Singh Kaur</title>
 
     <!-- Vue development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -350,7 +350,7 @@
 */
 
 
-                fetch('http://localhost:3000/collection/Order', {
+                fetch('https://coursework2.herokuapp.com/collection/Order', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -379,7 +379,7 @@
                             var tmpLessonID = this.cartLessonsID[i].lessonID
                             console.log(tmpLessonID + 'This is the TEMPORARY LESSONS ID ')
 
-                            fetch('http://localhost:3000/update/Lessons/'+lessonID, {
+                            fetch('https://coursework2.herokuapp.com/update/Lessons/'+lessonID, {
                                 method: 'PUT',
                                 headers: {
                                     'Accept': 'application/json',
