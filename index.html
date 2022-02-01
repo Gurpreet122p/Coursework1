@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Courswork 1 Gur Preet Singh Kaur</title>
+    <title>Courswork 2 Gur Preet Singh Kaur</title>
 
     <!-- Vue development version, includes helpful console warnings -->
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
@@ -114,9 +114,9 @@
 
                 <form action="" method="post" onchange="return checkData()" name="signup">
                     <br /><br />Name:
-                    <input name="NAME" type="text" id="NAME" />
+                    <input name="NAME" type="text" id="NAME" v-model="OrderName" />
                     <br /><br /> Phone Number:
-                    <input name="PHONE" type="text" id="PHONE" />
+                    <input name="PHONE" type="text" id="PHONE" v-model="OrderPhone" />
                     <input @click="submitForm()" v-bind:disabled='formIsNotCorrect' id="Button" type="submit" value="Place Order">
                 </form>
             </div>
@@ -141,6 +141,10 @@
             },
             formIsNotCorrect: true,
             userSelection: '',
+            OrderName:'',
+            cartLessonsID: [],
+            cartLessonsCounter: [],
+            OrderPhone:'',
             searchResult: [],
             lessons: [],
             orderAscending: '',
@@ -159,17 +163,130 @@
                 this.showProduct = this.showProduct ? false : true;
             },
             addToCart: function(lessons) {
+
+                /*
+                for (let i = 0; i < this.cart.length ; i++) {
+                    //console.log(JSON.stringify(this.cart[i].tmpLessonID))
+                    this.cartLessonsID.push(this.cart[i].tmpLessonID)
+                }
+                this.cartLessonsID.forEach((value, index) => {
+
+                    console.log(value);
+                    console.log(index);
+                });
+*/
+
+               /* for (let i = 0; i < this.cart.length ; i++) {
+                    //console.log(JSON.stringify(this.cart[i].tmpLessonID))
+                    // this.cartLessonsID.push(this.cart[i].tmpLessonID)
+                    let lessonID =  this.cart[i].tmpLessonID
+                    let counter =    this.cartCount(this.cart[i].tmpLessonID)
+
+                    if (this.cart.find.tmpLessonID === this.cartLessonsID.find.lessonID) {
+                        console.log('value found ')
+
+                        this.cartLessonsID.push({
+                            lessonID,
+                            counter
+                        })
+                    } else {
+                        console.log('value NOT found ')
+
+                    }
+
+                    this.cartLessonsID.push({
+                        lessonID,
+                        counter
+                    })
+                }
+            */
+
+                let tmpLessonID = lessons.id
+
+             //   console.log(JSON.stringify(this.lessons[2].id))
                 function ifCanAdd(item) {
                     if (item.id == lessons.id) {
                         lessons.availableInventory -= 1;
-                        return item;
+                      return item;
                     }
                 }
                 this.lessons.find(ifCanAdd);
                 this.cart.push({
                     cartId: (this.cart.length + 1),
-                    lessons
+                     lessons,
+                    tmpLessonID
                 })
+              /*  for (let i = 0; i < this.cart.length ; i++) {
+                    console.log(JSON.stringify(this.cart[i].tmpLessonID))
+                }*/
+               // console.log(JSON.stringify(this.cart[0].tmpLessonID) + ' STRINGI')
+
+
+                //code that counts the lessons space in the cart and puts it into cartLessonsID
+             /*  let counter =    this.cartCount(tmpLessonID)
+                console.log('Counter ==  ' + counter)
+                if (this.cart.find.tmpLessonID === this.cartLessonsID.find.lessonID) {
+                    console.log('value found ')
+
+                } else {
+                    console.log('value NOT found ')
+
+                }
+
+                this.cartLessonsID.push({
+                    tmpLessonID,
+                    counter
+                })
+
+*/
+
+
+//Testing
+/* WORKING
+                for (let s = 0; s < this.lessons.length ; s++) {
+                    let lessonID =  this.lessons[s].id
+
+
+                        let counter =    this.cartCount(lessonID)
+                if (counter > 0){
+                    this.cartLessonsCounter.push({
+                        lessonID,
+                        counter
+                    })
+                }
+
+                }
+
+*/ //WORKING
+
+
+
+
+
+/*
+                for (let i = 0; i < this.cart.length ; i++) {
+                    //console.log(JSON.stringify(this.cart[i].tmpLessonID))
+                    // this.cartLessonsID.push(this.cart[i].tmpLessonID)
+                    let lessonID =  this.cart[i].tmpLessonID
+                    // let counter =    this.cartCount(this.cart[i].tmpLessonID)
+
+                        let counter =    this.cartCount(this.cart[i].tmpLessonID)
+
+
+                        this.cartLessonsCounter.push({
+                            lessonID,
+                            counter
+                        })
+
+
+
+                }
+
+*/
+
+
+//testing
+
             },
             deleteFromCart: function(lesson) {
                 this.cart = this.cart.filter(item => item.cartId != lesson.cartId)
@@ -183,7 +300,131 @@
                 this.lessons.find(ifCan)
             },
             submitForm() {
-                alert('Order submitted!')
+                for (let s = 0; s < this.lessons.length ; s++) {
+                    let lessonID =  this.lessons[s].id
+
+
+                    let counter =    this.cartCount(lessonID)
+                    if (counter > 0){
+                        this.cartLessonsID.push({
+                            lessonID
+
+                        })
+                        this.cartLessonsCounter.push({
+
+                            counter
+                        })
+                    }
+
+                }
+
+
+/*
+                for (let i = 0; i < this.cart.length ; i++) {
+                    //console.log(JSON.stringify(this.cart[i].tmpLessonID))
+                   // this.cartLessonsID.push(this.cart[i].tmpLessonID)
+                    let lessonID =  this.cart[i].tmpLessonID
+                   // let counter =    this.cartCount(this.cart[i].tmpLessonID)
+                    if (this.cart.find.tmpLessonID === this.cartLessonsID.find.lessonID) {
+                        let counter =    this.cartCount(this.cart[i].tmpLessonID)
+                        console.log('value found ')
+
+                        this.cartLessonsCounter.push({
+                            lessonID,
+                            counter
+                        })
+
+
+                    } else {
+                        console.log('value NOT found ')
+                        this.cartLessonsID.push({
+                            lessonID
+
+                        })
+                    }
+
+
+
+                }
+
+*/
+
+
+                fetch('http://localhost:3000/collection/Order', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                       "LessonID":  this.cartLessonsID,
+                        "Name": this.OrderName,
+                        "Phone": this.OrderPhone,
+                        "Spaces": this.cartLessonsCounter
+
+            }),
+                })
+
+
+                for (let i = 0; i < this.cartLessonsID.length; i++) { //Loop for every lesson that is sent to the database
+
+                    for (let s = 0; s < this.lessons.length ; s++) { //Loop for every lesson available
+                        let lessonID =  this.lessons[s].id
+
+
+
+                        if (lessonID === this.cartLessonsID[i].lessonID){
+                            var availableSpace = this.lessons[s].availableInventory - this.cartLessonsCounter[i].counter + 1
+
+                            var tmpLessonID = this.cartLessonsID[i].lessonID
+                            console.log(tmpLessonID + 'This is the TEMPORARY LESSONS ID ')
+
+                            fetch('http://localhost:3000/update/Lessons/'+lessonID, {
+                                method: 'PUT',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    "availableInventory": availableSpace
+                                }),
+                            })
+
+                        }
+
+                    }
+
+
+                }
+
+
+
+
+
+                /*
+                  for (let i = 0; i <= this.cart.length; i++) {
+                      console.log(JSON.stringify(this.cart[i]))
+                      i++
+
+                      fetch('http://localhost:3000/collection/Order', {
+                      method: 'POST',
+                      headers: {
+                          'Accept': 'application/json',
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                          "LessonID": "value3",
+                          "Name": this.OrderName,
+                          "Phone": this.OrderPhone,
+                          "Spaces": 3
+
+                      }),
+                  });
+  */
+                alert(  'igy' )
+
+
+
             },
             canAddToCart(lessons) {
                 return lessons.availableInventory > this.cartCount(lessons.id)
@@ -191,7 +432,7 @@
             cartCount(id) {
                 let count = 0;
                 for (let i = 0; i < this.cart.length; i++) {
-                    if (this.cart[i] === id)
+                    if (this.cart[i].lessons.id === id)
                         count++;
                 }
                 return count;
