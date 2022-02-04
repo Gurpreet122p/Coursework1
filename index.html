@@ -237,15 +237,15 @@
                     let lessonID =  this.lessons[s].id
 
 
-                    let slots =    this.cartCount(lessonID)
-                    if (slots > 0){
+                    let spaces =    this.cartCount(lessonID)
+                    if (spaces > 0){
                         var localApp = this;
                         this.cartLessonsID.push({
                             lessonID
 
                         })
                         this.cartLessonsCounter.push({
-                           slots
+                            spaces
                         })
                     }
 
