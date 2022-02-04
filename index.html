@@ -112,7 +112,7 @@
             <div id="checkout">
                 <h2> Checkout</h2>
 
-                <form action="" method="post" onchange="return checkData()" name="signup">
+                <form action="https://gurpreet122p.github.io/Coursework1/" method="GET" onchange="return checkData()" name="signup">
                     <br /><br />Name:
                     <input name="NAME" type="text" id="NAME" v-model="OrderName" />
                     <br /><br /> Phone Number:
@@ -299,14 +299,10 @@
 
 
                 }
-                
-            
-                
+
                 alert(  'Order Submitted Successfully!' )
-   
-                   window.location.replace("https://gurpreet122p.github.io/Coursework1/");
 
-
+                document.location.reload(true)
 
             },
             canAddToCart(lessons) {
