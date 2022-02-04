@@ -216,76 +216,7 @@
                      lessons,
                     tmpLessonID
                 })
-              /*  for (let i = 0; i < this.cart.length ; i++) {
-                    console.log(JSON.stringify(this.cart[i].tmpLessonID))
-                }*/
-               // console.log(JSON.stringify(this.cart[0].tmpLessonID) + ' STRINGI')
 
-
-                //code that counts the lessons space in the cart and puts it into cartLessonsID
-             /*  let counter =    this.cartCount(tmpLessonID)
-                console.log('Counter ==  ' + counter)
-                if (this.cart.find.tmpLessonID === this.cartLessonsID.find.lessonID) {
-                    console.log('value found ')
-
-                } else {
-                    console.log('value NOT found ')
-
-                }
-
-                this.cartLessonsID.push({
-                    tmpLessonID,
-                    counter
-                })
-
-*/
-
-
-//Testing
-/* WORKING
-                for (let s = 0; s < this.lessons.length ; s++) {
-                    let lessonID =  this.lessons[s].id
-
-
-                        let counter =    this.cartCount(lessonID)
-                if (counter > 0){
-                    this.cartLessonsCounter.push({
-                        lessonID,
-                        counter
-                    })
-                }
-
-                }
-
-*/ //WORKING
-
-
-
-
-
-/*
-                for (let i = 0; i < this.cart.length ; i++) {
-                    //console.log(JSON.stringify(this.cart[i].tmpLessonID))
-                    // this.cartLessonsID.push(this.cart[i].tmpLessonID)
-                    let lessonID =  this.cart[i].tmpLessonID
-                    // let counter =    this.cartCount(this.cart[i].tmpLessonID)
-
-                        let counter =    this.cartCount(this.cart[i].tmpLessonID)
-
-
-                        this.cartLessonsCounter.push({
-                            lessonID,
-                            counter
-                        })
-
-
-
-                }
-
-*/
-
-
-//testing
 
             },
             deleteFromCart: function(lesson) {
@@ -300,57 +231,29 @@
                 this.lessons.find(ifCan)
             },
             submitForm() {
+
+
                 for (let s = 0; s < this.lessons.length ; s++) {
                     let lessonID =  this.lessons[s].id
 
 
-                    let counter =    this.cartCount(lessonID)
-                    if (counter > 0){
+                    let slots =    this.cartCount(lessonID)
+                    if (slots > 0){
+                        var localApp = this;
                         this.cartLessonsID.push({
                             lessonID
 
                         })
                         this.cartLessonsCounter.push({
-
-                            counter
+                           slots
                         })
                     }
 
                 }
 
 
-/*
-                for (let i = 0; i < this.cart.length ; i++) {
-                    //console.log(JSON.stringify(this.cart[i].tmpLessonID))
-                   // this.cartLessonsID.push(this.cart[i].tmpLessonID)
-                    let lessonID =  this.cart[i].tmpLessonID
-                   // let counter =    this.cartCount(this.cart[i].tmpLessonID)
-                    if (this.cart.find.tmpLessonID === this.cartLessonsID.find.lessonID) {
-                        let counter =    this.cartCount(this.cart[i].tmpLessonID)
-                        console.log('value found ')
 
-                        this.cartLessonsCounter.push({
-                            lessonID,
-                            counter
-                        })
-
-
-                    } else {
-                        console.log('value NOT found ')
-                        this.cartLessonsID.push({
-                            lessonID
-
-                        })
-                    }
-
-
-
-                }
-
-*/
-
-
-                fetch('https://coursework2.herokuapp.com/collection/Order', {
+                fetch('http://localhost:3000/collection/Order', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -374,12 +277,12 @@
 
 
                         if (lessonID === this.cartLessonsID[i].lessonID){
-                            var availableSpace = this.lessons[s].availableInventory
+                            var availableSpace = this.lessons[s].availableInventory // - this.cartLessonsCounter[i].counter
 
                             var tmpLessonID = this.cartLessonsID[i].lessonID
                             console.log(tmpLessonID + 'This is the TEMPORARY LESSONS ID ')
 
-                            fetch('https://coursework2.herokuapp.com/update/Lessons/'+lessonID, {
+                            fetch('http://localhost:3000/update/Lessons/'+lessonID, {
                                 method: 'PUT',
                                 headers: {
                                     'Accept': 'application/json',
@@ -397,31 +300,7 @@
 
                 }
 
-
-
-
-
-                /*
-                  for (let i = 0; i <= this.cart.length; i++) {
-                      console.log(JSON.stringify(this.cart[i]))
-                      i++
-
-                      fetch('http://localhost:3000/collection/Order', {
-                      method: 'POST',
-                      headers: {
-                          'Accept': 'application/json',
-                          'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                          "LessonID": "value3",
-                          "Name": this.OrderName,
-                          "Phone": this.OrderPhone,
-                          "Spaces": 3
-
-                      }),
-                  });
-  */
-                alert(  'igy' )
+                alert(  'Order Submitted Successfully!' )
 
 
 
@@ -476,33 +355,7 @@
         },
         computed: {
 
-            userSearch() {
-/*
-                if (!this.search) {
-                    return console.log("No search ")
-                }
-                var localApp = this;
 
-                fetch('https://coursework2.herokuapp.com/Search/Lessons/?search=' + this.search + '', {
-                    method: 'GET'
-                })
-                    .then(function(response) {
-                        if (response.ok) {
-                            console.log('Success')
-                        } else {
-                            console.log('Error fetching data')
-                        }
-
-                        return response.json();
-                    })
-                    .then(function(json) {
-
-                        console.log(json)
-                        localApp.searchResult = json;
-
-                    })
-*/
-            },
 
             ss() {
                 if (this.orderAscending === "Ascending") {
@@ -539,7 +392,7 @@
 
 
                 if (!this.search) {
-                   // return console.log("No search ")
+                   // IF There is nothing in the search bar then retrieve all lessons otherwise perform search query
                     fetch('https://coursework2.herokuapp.com/collection/Lessons', {
                         method: 'GET'
                     })
